@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DGX Messaging Lab</title>
+<meta name="description" content="An independent product marketing case study on the NVIDIA DGX platform: positioning, a messaging house, a landscape guide, three writing samples and a line-by-line claim check against public NVIDIA sources.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=Caveat:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one reading column (68ch) with a 240px margin column for handwritten notes at ≥1024px; notes sit inline on smaller screens. Sections are separated by thin rules, not cards. */
+:root{
+  --paper:#FAF7F2; --ink:#1F1D1A; --muted:#5E5850; --clay:#B4502D; --blue:#2B4C7E; --highlight:#F3E3A3; --rule:#E4DDD2;
+  --wash:#F2EDE4;
+  --f-display:"Fraunces", Georgia, "Times New Roman", serif;
+  --f-body:Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-hand:"Caveat", "Segoe Print", cursive;
+  --f-mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#171513; --ink:#EDE7DD; --muted:#A9A196; --clay:#E08A63; --blue:#8FB0E0; --highlight:#4A3F1E; --rule:#2E2A26; --wash:#201D1A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#171513; --ink:#EDE7DD; --muted:#A9A196; --clay:#E08A63; --blue:#8FB0E0; --highlight:#4A3F1E; --rule:#2E2A26; --wash:#201D1A;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:17.5px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+.page{max-width:calc(68ch + 48px + 240px);margin:0 auto;padding-block:40px 64px;padding-left:max(20px, env(safe-area-inset-left, 0px));padding-right:max(20px, env(safe-area-inset-right, 0px))}
+.col{max-width:68ch}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.25rem,6vw,3.75rem);line-height:1.1}
+h2{font-size:clamp(1.7rem,3.6vw,2.4rem);line-height:1.15}
+h3{font-size:1.2rem;line-height:1.3}
+p{margin:0 0 1em}
+p:last-child{margin-bottom:0}
+a{color:var(--blue);text-underline-offset:3px;text-decoration-thickness:1px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--clay);outline-offset:3px;border-radius:3px}
+.muted{color:var(--muted)}
+.small{font-size:15px}
+.label{font:500 12px/1.4 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+mark{background:var(--highlight);color:inherit;padding:0 .15em;border-radius:2px}
+
+/* sections */
+section{padding-block:56px;border-top:1px solid var(--rule)}
+.q{font-size:16px;color:var(--clay);font-weight:500;margin-bottom:6px}
+.sec-title{margin-bottom:22px}
+
+/* margin notes */
+.pair{display:grid;gap:10px}
+.note{font-family:var(--f-hand);font-size:22px;line-height:1.2;color:var(--clay);display:flex;gap:8px;align-items:flex-start;max-width:30ch}
+.note svg{flex:none;width:34px;height:26px;transform:rotate(-70deg) scaleX(-1);margin-top:-2px}
+@media (min-width:1024px){
+  .pair{grid-template-columns:minmax(0,68ch) 240px;column-gap:48px;align-items:start}
+  .pair > .note{grid-column:2;max-width:none}
+  .note svg{transform:none;margin-top:2px}
+}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:56px}
+.theme{font:500 13px var(--f-body);color:var(--muted);background:transparent;border:1px solid var(--rule);border-radius:999px;padding:5px 12px;cursor:pointer}
+.theme:hover{color:var(--ink);border-color:var(--muted)}
+.hero h1{margin:14px 0 22px}
+.hero .who{font-size:18px;color:var(--muted);max-width:60ch}
+.start{display:inline-block;margin-top:26px;font-weight:600;color:var(--ink);text-decoration:none;position:relative;padding-bottom:8px}
+.start svg{position:absolute;left:0;bottom:-4px;width:100%;height:12px;overflow:visible}
+.draw path{stroke-dasharray:400;stroke-dashoffset:400;animation:draw 1.1s ease-out .3s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.draw path{animation:none;stroke-dashoffset:0}}
+.card{margin-top:32px}
+.cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.dodont{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:10px;font-size:15px;border-top:1px solid var(--rule);padding-top:12px}
+.dodont ul{margin:4px 0 0;padding-left:18px}
+@media (max-width:520px){.dodont{grid-template-columns:1fr}}
+.printonly{display:none}
+@media print{
+  html.print-card body *{visibility:hidden}
+  html.print-card #card, html.print-card #card *{visibility:visible}
+  html.print-card #card{position:absolute;left:0;top:0;width:100%;border:1.5px solid #000;color:#000;background:#fff;margin:0}
+  html.print-card #printcard{display:none}
+  html.print-card .printonly{display:block}
+  html.print-card .src{color:#000}
+  @page{margin:16mm}
+}
+
+/* callout (one box per section max) */
+.box{border:1.5px solid var(--ink);border-radius:6px;padding:22px 24px;margin-top:8px}
+.box .big{font-family:var(--f-display);font-size:clamp(1.35rem,2.6vw,1.7rem);line-height:1.25;margin:6px 0 14px}
+
+/* citations */
+.src{font:500 11px/1 var(--f-mono);color:var(--blue);text-decoration:none;vertical-align:super;margin-left:2px;padding:0 1px}
+.src:hover{text-decoration:underline}
+
+/* messaging house */
+.roofline{font-family:var(--f-display);font-size:clamp(1.3rem,2.4vw,1.6rem);line-height:1.3;padding:18px 0;border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);margin-bottom:6px}
+.pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid var(--rule)}
+.pillars > div{padding:18px 18px 20px 0}
+.pillars > div + div{padding-left:18px;border-left:1px solid var(--rule)}
+@media (max-width:760px){.pillars{grid-template-columns:1fr}.pillars > div{padding:16px 0}.pillars > div + div{padding-left:0;border-left:0;border-top:1px solid var(--rule)}}
+.pillars .n{font:500 12px var(--f-mono);color:var(--clay)}
+.pillars h3{margin:4px 0 8px}
+.pillars p{font-size:15.5px}
+.pillars .proof{font-size:14px;color:var(--muted);border-left:2px solid var(--highlight);padding-left:10px;margin-top:10px}
+.foundation{font-size:15.5px;padding:14px 0;border-bottom:2px solid var(--ink)}
+.aud{margin-top:28px}
+.aud > div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:4px 20px;padding:16px 0;border-top:1px solid var(--rule)}
+.aud > div:last-child{border-bottom:1px solid var(--rule)}
+@media (max-width:640px){.aud > div{grid-template-columns:1fr}}
+.aud .who{font-weight:600}
+.aud .vp{font-family:var(--f-display);font-size:1.25rem;line-height:1.3;margin-bottom:6px}
+.aud .tm{font-size:15px;color:var(--muted)}
+.aud .tm b{color:var(--ink);font-weight:500}
+
+/* landscape */
+dl.port{margin:0;display:grid;grid-template-columns:200px minmax(0,1fr);gap:0}
+dl.port dt,dl.port dd{padding:10px 0;border-top:1px solid var(--rule);margin:0}
+dl.port dt{font-weight:600;padding-right:16px}
+dl.port dt span{display:block;font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+dl.port dd{font-size:15.5px}
+@media (max-width:640px){dl.port{grid-template-columns:1fr}dl.port dd{border-top:0;padding-top:0}}
+.tablewrap{overflow-x:auto;margin-top:8px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:12px 14px 12px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--ink)}
+td ul{margin:0;padding-left:16px}
+td li+li{margin-top:4px}
+@media (max-width:700px){.stack thead{display:none}.stack tr{display:grid;gap:4px;padding:12px 0;border-bottom:1px solid var(--rule)}.stack td{display:block;padding:0;border:0}}
+ol.why{margin:0;padding-left:0;list-style:none;counter-reset:w}
+ol.why li{counter-increment:w;display:grid;grid-template-columns:30px minmax(0,1fr);gap:4px 10px;padding:14px 0;border-top:1px solid var(--rule)}
+ol.why li::before{content:counter(w);font:500 14px var(--f-mono);color:var(--clay)}
+ol.why .so{font-size:15px;color:var(--muted);margin-top:4px}
+
+/* samples */
+.sample{padding:22px 0;border-top:1px solid var(--rule)}
+.sample:last-of-type{border-bottom:1px solid var(--rule)}
+.pull{font-family:var(--f-display);font-size:clamp(1.4rem,3vw,1.9rem);line-height:1.2;margin:6px 0 10px}
+.sample details summary{font-weight:600;color:var(--blue);cursor:pointer;width:max-content}
+.full{margin-top:16px;padding-left:18px;border-left:2px solid var(--rule);font-size:16px}
+.full h4{font-size:15.5px;margin:14px 0 2px;font-family:var(--f-body)}
+.full .cta{font-weight:600}
+.measure-line{font-size:14.5px;color:var(--muted);margin-top:12px}
+.measure-line b{color:var(--ink);font-weight:500}
+
+/* claim check */
+.ba{margin:8px 0 6px}
+.ba del{font-family:var(--f-display);font-size:1.35rem;color:var(--muted);text-decoration-color:var(--clay);text-decoration-thickness:2px}
+.ba ins{display:block;font-family:var(--f-display);font-size:1.35rem;text-decoration:none;margin-top:6px}
+.ba ins mark{padding:0 .2em}
+.mk{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--clay);color:var(--clay);font:600 12px var(--f-mono);vertical-align:middle}
+.callouts{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:15.5px}
+.callouts li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:8px}
+.callouts li b{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--clay);color:var(--clay);font:600 12px var(--f-mono)}
+.stats{display:flex;flex-wrap:wrap;gap:6px 28px;margin:20px 0 8px;font-size:15.5px}
+.stats strong{font-family:var(--f-display);font-size:1.6rem;font-weight:600;margin-right:6px}
+.types{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;color:var(--muted)}
+.types b{color:var(--ink);font-weight:500}
+.pairs{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:12px;font-size:15.5px}
+.pairs li{padding-top:12px;border-top:1px solid var(--rule)}
+.pairs s{color:var(--muted);text-decoration-color:var(--clay)}
+.rules{columns:2;column-gap:28px;padding-left:18px;font-size:15px;margin:10px 0 0}
+@media (max-width:640px){.rules{columns:1}}
+details.log{margin-top:14px}
+details.log summary{cursor:pointer;font-weight:500;font-size:15.5px}
+details.log table{font-size:13.5px}
+.cid{font:400 13px var(--f-mono);color:var(--muted)}
+.st{font:500 12px var(--f-mono);white-space:nowrap}
+.st.ok{color:var(--muted)} .st.bad{color:var(--clay)}
+
+/* opportunities */
+.opp{padding:18px 0;border-top:1px solid var(--rule)}
+.opp h3{margin-bottom:6px}
+.opp .meta{font:500 12px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--clay);margin-bottom:4px}
+.chain{font:500 14px/1.5 var(--f-mono);color:var(--muted);margin-bottom:10px;padding:8px 0;border-bottom:1px dashed var(--rule)}
+dl.talk{margin:10px 0 0}
+dl.talk dt{font-family:var(--f-display);font-size:1.1rem;font-weight:600;padding-top:14px;border-top:1px solid var(--rule)}
+dl.talk dd{margin:4px 0 14px;font-size:15.5px}
+.kpi caption{caption-side:top;text-align:left;font:500 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--clay);padding-bottom:8px}
+
+/* next */
+.next li{margin-bottom:10px}
+.lesson{padding:14px 0;border-top:1px solid var(--rule)}
+.lesson h3{font-size:1.1rem;margin-bottom:4px}
+
+/* footer */
+footer{border-top:1px solid var(--rule);padding-top:40px;font-size:14px;color:var(--muted)}
+footer .human{font-family:var(--f-display);font-size:1.3rem;color:var(--ink);margin-bottom:10px}
+ol.srcs{margin:16px 0 24px;padding:0;list-style:none;display:grid;gap:8px;font-size:13.5px}
+ol.srcs li{display:grid;grid-template-columns:32px minmax(0,1fr);gap:8px}
+ol.srcs b{font:500 12px var(--f-mono);color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="top">
+  <span class="label">DGX Messaging Lab</span>
+  <button class="theme" id="theme" type="button" aria-label="Switch color theme">Dark mode</button>
+</div>
+
+<header class="hero col">
+  <div class="label">Independent case study · not affiliated with NVIDIA</div>
+  <h1>Can a supercomputer sound like it's for the people who sign off on it?</h1>
+  <p class="who">Hi, I'm Abby. I study marketing science at Columbia Business School, and I've spent two summers at WuXi AppTec, most recently in B2B product marketing. This is me practicing the job I'd love to have.</p>
+  <a class="start" href="#house">Start with the messaging house ↓
+    <svg class="draw" viewBox="0 0 240 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8 C 40 3, 80 11, 120 6 S 200 3, 238 7" fill="none" stroke="var(--clay)" stroke-width="2.5" stroke-linecap="round"/></svg>
+  </a>
+</header>
+
+<section id="why" style="margin-top:56px">
+  <div class="pair">
+    <div class="col">
+      <p class="q">Why would a marketing student write about supercomputers?</p>
+      <h2 class="sec-title">Why I made this</h2>
+      <p>This past summer at WuXi AppTec, I helped launch Voyager, a customer intelligence platform. It turned one or two days of account research into under a minute. Then came the harder part. Sales reps wanted to get in and out fast. Marketing wanted every contact and project on record. We met in the middle: an account search that's easy to use, quick tags rather than extra fields, and a points game to get the records filled in.</p>
+      <p>What stayed with me is that people don't adopt a product because it's good. They adopt it when someone explains it in their terms. DGX is the same puzzle on a much bigger stage, because the person who signs off is rarely the person who runs it. So I tried writing for both.</p>
+    </div>
+  </div>
+</section>
+
+<section id="tension">
+  <div class="pair">
+    <div class="col">
+      <p class="q">Who signs off on a DGX purchase?</p>
+      <h2 class="sec-title">Three people, three different questions</h2>
+      <p>An infrastructure leader asks whether the team can run it. A head of AI asks whether work built at the desk can move to the data center. A CFO asks what it takes to power it, and that question is getting louder: NVIDIA now calls energy "the biggest bottleneck for AI infrastructure buildouts."<a class="src" href="#s11">11</a></p>
+      <p>Buyers can also reach NVIDIA platforms through DGX, partner servers built on HGX or MGX, or the cloud,<a class="src" href="#s20">20</a><a class="src" href="#s21">21</a><a class="src" href="#s22">22</a> so DGX messaging has to explain fit, not just speed.</p>
+      <div class="box">
+        <div class="label">How I'd position DGX</div>
+        <p class="big">Stop building an AI platform. Start running an AI factory.</p>
+        <p>For enterprises that need AI in production rather than another infrastructure project, <b>NVIDIA DGX is the AI factory delivered as one tested system</b>: compute, networking, storage and software designed to work together,<a class="src" href="#s6">6</a><a class="src" href="#s8">8</a> and run with operating patterns NVIDIA uses for its own AI.<a class="src" href="#s27">27</a><a class="src" href="#s29">29</a></p>
+        <p class="muted">Whether it runs on premises, in a colocation site or with a managed provider,<a class="src" href="#s2">2</a> DGX gives one platform from the developer's desk to the data center,<a class="src" href="#s24">24</a> with NVIDIA experts behind it.<a class="src" href="#s3">3</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="house">
+  <div class="pair">
+    <div class="col">
+      <p class="q">What should every DGX message hold up?</p>
+      <h2 class="sec-title">The messaging house</h2>
+      <p>One position, three pillars and a plain-language promise for each audience. The copy is mine. Every proof point under it is quoted from a public NVIDIA page.</p>
+    </div>
+    <aside class="note"><svg viewBox="0 0 34 26" aria-hidden="true" class="draw"><path d="M32 4 C 20 4, 10 10, 4 20 M4 20 L 11 17 M4 20 L 6 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>every number here links to its source</span></aside>
+  </div>
+  <div class="roofline">The AI factory, delivered as one tested system and run the way NVIDIA runs AI, from the desk to the data center.</div>
+  <div class="pillars">
+    <div><span class="n">Pillar 1</span><h3>One system, not a project</h3><p>Compute, networking, storage and software arrive designed and tested together, so teams start with workloads, not integration.</p><p class="proof">"A full-stack data center platform … optimized to work together"<a class="src" href="#s6">6</a> · "Extensively tested … with real-world enterprise AI workloads"<a class="src" href="#s8">8</a></p></div>
+    <div><span class="n">Pillar 2</span><h3>Run it the way NVIDIA runs AI</h3><p>Operations software and expertise from the company that runs its own most demanding AI on DGX Cloud.</p><p class="proof">Mission Control: "recover from problems 10x faster, without manual intervention"<a class="src" href="#s9">9</a> · DGX Cloud is "NVIDIA's internal cloud environment for building and operating AI at scale"<a class="src" href="#s27">27</a></p></div>
+    <div><span class="n">Pillar 3</span><h3>Power-aware by design</h3><p>When power is the limit, the DGX platform includes NVIDIA Mission Control,<a class="src" href="#s30">30</a> "with access to validated implementations of NVIDIA's latest power innovations": 85% power at 93% performance throughput in power-constrained or cost-conscious environments.<a class="src" href="#s10">10</a></p><p class="proof">"Run at 85% power with 93% performance throughput" in power-constrained environments<a class="src" href="#s10">10</a> · DGX Vera Rubin NVL72: "industry-leading performance per watt and tokens per watt"<a class="src" href="#s26">26</a></p></div>
+  </div>
+  <p class="foundation"><span class="label">Foundation</span> &nbsp;Own it your way: on premises, colocated, rented from managed service providers or in private clouds,<a class="src" href="#s2">2</a> with "predictable costs" through certified partners.<a class="src" href="#s23">23</a></p>
+
+  <div class="aud">
+    <div><span class="who">Infrastructure leader</span><div><p class="vp">Put your team on AI services, not rack integration.</p><p class="tm"><b>Tech:</b> turnkey full-stack system; autonomous recovery in Mission Control. <b>Means:</b> fewer integration projects and fewer stalled runs to firefight. Proof: turnkey AI data center "rather than struggling with platform complexity";<a class="src" href="#s7">7</a> 10x faster recovery.<a class="src" href="#s9">9</a></p></div></div>
+    <div><span class="who">Head of AI / ML</span><div><p class="vp">Prototype on the desk, scale on the same stack.</p><p class="tm"><b>Tech:</b> DGX Spark and DGX Station locally; DGX SuperPOD in the data center. <b>Means:</b> work built at the desk can move to the data center or cloud. Proof: DGX Station developers can "seamlessly deploy to the data center or cloud";<a class="src" href="#s24">24</a> NVIDIA reports DGX "boosted data scientists' productivity eight-fold" at BMW.<a class="src" href="#s5">5</a></p></div></div>
+    <div><span class="who">CFO / business sponsor</span><div><p class="vp">Get more AI out of the power and budget you already have.</p><p class="tm"><b>Tech:</b> power-aware operations; flexible ownership models. <b>Means:</b> more output inside a fixed power envelope, and spend that is easier to plan. Proof: 85% power at 93% throughput;<a class="src" href="#s10">10</a> "predictable costs"<a class="src" href="#s23">23</a> and "simplified acquisition and scaling".<a class="src" href="#s23">23</a></p></div></div>
+  </div>
+</section>
+
+<section id="landscape">
+  <div class="pair">
+    <div class="col">
+      <p class="q">Which DGX is for whom, and when is something else a better fit?</p>
+      <h2 class="sec-title">A landscape guide</h2>
+    </div>
+    <aside class="note"><svg viewBox="0 0 34 26" aria-hidden="true" class="draw"><path d="M32 4 C 20 4, 10 10, 4 20 M4 20 L 11 17 M4 20 L 6 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>32 excerpts from 13 public NVIDIA pages</span></aside>
+  </div>
+  <div class="col">
+    <h3 style="margin-bottom:10px">Who each part of the portfolio is for</h3>
+    <dl class="port">
+      <dt><span>Desk</span>DGX Spark</dt><dd>Developers building and running agents locally: "a complete platform for local autonomous agents".<a class="src" href="#s25">25</a></dd>
+      <dt><span>Desk</span>DGX Station</dt><dd>Researchers who need very large models at their desk: a "deskside AI supercomputer" supporting models up to 1 trillion parameters.<a class="src" href="#s24">24</a></dd>
+      <dt><span>System</span>DGX B300</dt><dd>Enterprises adding AI to today's data center: "compatible with NVIDIA MGX and traditional enterprise racks".<a class="src" href="#s32">32</a></dd>
+      <dt><span>System</span>DGX GB300</dt><dd>Teams training and serving the most complex models: NVIDIA's "most advanced liquid-cooled AI system".<a class="src" href="#s28">28</a></dd>
+      <dt><span>Data center</span>DGX SuperPOD</dt><dd>Organizations building AI factories at scale: "a turnkey AI data center solution".<a class="src" href="#s7">7</a></dd>
+      <dt><span>Next generation</span>DGX Vera Rubin NVL72</dt><dd>Gigascale training and inference for agentic AI: a "turnkey AI infrastructure solution" built for performance per watt.<a class="src" href="#s26">26</a></dd>
+      <dt><span>Software</span>Mission Control</dt><dd>Platform teams running AI factories day to day, "empowering platform teams to operate efficiently".<a class="src" href="#s29">29</a></dd>
+      <dt><span>NVIDIA's internal cloud</span>DGX Cloud</dt><dd>Where NVIDIA builds its own AI. Teams can also get it through AWS, Google Cloud, Microsoft Azure and OCI as "a high-performance, fully managed AI training platform".<a class="src" href="#s27">27</a></dd>
+    </dl>
+
+    <h3 style="margin:36px 0 6px">DGX, a partner system, or cloud?</h3>
+    <p class="small muted">Partner-safe guidance: all three paths run on NVIDIA platforms, so the message is "which fits you", never "which is better". The "choose it when" lines are my inference from public pages; the facts beside them are cited.</p>
+  </div>
+  <div class="tablewrap">
+    <table class="stack">
+      <thead><tr><th style="width:22%">Path</th><th style="width:32%">Choose it when…</th><th>What the public sources say</th></tr></thead>
+      <tbody>
+        <tr><td><b>NVIDIA DGX</b></td><td>You want NVIDIA's full stack, software and expertise as one system. Here NVIDIA tests the full stack together and stands behind it with its own AI experts and enterprise support.<a class="src" href="#s6">6</a><a class="src" href="#s8">8</a><a class="src" href="#s3">3</a><a class="src" href="#s31">31</a></td><td><ul><li>Full-stack platform designed to work together<a class="src" href="#s6">6</a></li><li>Direct access to NVIDIA AI experts<a class="src" href="#s3">3</a></li><li>Bought through certified partners, with lifecycle management<a class="src" href="#s23">23</a></li></ul></td></tr>
+        <tr><td><b>Partner system on HGX / MGX</b></td><td>You want your standard server vendor or a tailored configuration.</td><td><ul><li>HGX brings NVIDIA GPUs, NVLink and networking to partner servers; Rubin GPUs pair with Vera or x86 CPUs<a class="src" href="#s21">21</a></li><li>MGX lets OEMs and ODMs "build tailored solutions for different use cases"<a class="src" href="#s22">22</a></li><li>Cisco, Dell, HPE, Lenovo and Supermicro are expected to ship Vera Rubin servers<a class="src" href="#s20">20</a></li></ul></td></tr>
+        <tr><td><b>Cloud</b></td><td>You need capacity now, without owning a data center.</td><td><ul><li>Vera Rubin products from AWS, Google Cloud, Microsoft Azure, OCI and NVIDIA Cloud Partners<a class="src" href="#s20">20</a></li><li>NVIDIA DGX Cloud on these clouds offers "flexible term lengths and access to NVIDIA experts"<a class="src" href="#s27">27</a></li><li>DGX can also be rented from managed service providers<a class="src" href="#s2">2</a></li></ul></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col">
+    <h3 style="margin:32px 0 4px">Seller talk track</h3>
+    <p class="small muted">For sales and partner training. Responses stay partner-safe and use only what the sources say.</p>
+    <dl class="talk">
+      <dt>"We buy from Dell or HPE."</dt>
+      <dd>Partner servers built on NVIDIA HGX and MGX are NVIDIA platforms too.<a class="src" href="#s21">21</a><a class="src" href="#s22">22</a> If you want NVIDIA's full stack tested together, with direct access to NVIDIA AI experts, that's DGX,<a class="src" href="#s6">6</a><a class="src" href="#s8">8</a><a class="src" href="#s3">3</a> and it's bought through certified partners.<a class="src" href="#s23">23</a></dd>
+      <dt>"Our power is capped."</dt>
+      <dd>NVIDIA Mission Control can run at 85% power with 93% performance throughput in power-constrained or cost-conscious environments.<a class="src" href="#s10">10</a></dd>
+      <dt>"We need capacity now."</dt>
+      <dd>NVIDIA DGX Cloud is offered on AWS, Google Cloud, Microsoft Azure and OCI as a fully managed AI training platform, with "flexible term lengths and access to NVIDIA experts".<a class="src" href="#s27">27</a></dd>
+    </dl>
+    <h3 style="margin:36px 0 6px">Why Vera Rubin, storage and networking matter to buyers now</h3>
+    <ol class="why">
+      <li><div><b>Power.</b> "Energy is now the biggest bottleneck for AI infrastructure buildouts."<a class="src" href="#s11">11</a> NVIDIA says DSX Max-Q enables "30% more AI infrastructure within a fixed-power data center" (no baseline stated by NVIDIA).<a class="src" href="#s19">19</a><p class="so">So what: buyers will compare tokens per watt, not just GPU counts.</p></div></li>
+      <li><div><b>Storage.</b> BlueField-4 STX is "AI-native storage infrastructure that extends GPU memory seamlessly across the POD", and NVIDIA DOCA Memos, which "enables dedicated KV cache storage processing", can "boost inference throughput by up to 5x" (versus general-purpose storage architectures).<a class="src" href="#s17">17</a><p class="so">So what: agents carry long context as KV cache. When STX holds that cache in a shared layer across the POD, storage becomes an inference-throughput decision, not a capacity line item.</p></div></li>
+      <li><div><b>Networking.</b> Spectrum-6 SPX "is engineered to accelerate east-west traffic across AI factories";<a class="src" href="#s18">18</a> the Vera Rubin DSX reference design spans "compute, NVIDIA Spectrum-X Ethernet networking and storage".<a class="src" href="#s12">12</a><p class="so">So what: the network is now sold as part of the factory, not an add-on.</p></div></li>
+      <li><div><b>Modular builds.</b> Infrastructure is moving "from discrete chips and standalone servers to fully integrated rack-scale systems, POD-scale deployments".<a class="src" href="#s15">15</a> Partners such as Vertiv are building "a prefabricated, converged data center infrastructure solution" on DSX.<a class="src" href="#s14">14</a><p class="so">So what: the buying unit is the rack and the POD, so messaging should be too.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<section id="samples">
+  <div class="col">
+    <p class="q">What would this sound like in a CFO's inbox?</p>
+    <h2 class="sec-title">Writing samples</h2>
+    <p>Three pieces, one message. These are the final versions after the claim check; every factual sentence carries its source.</p>
+  </div>
+
+  <div class="sample col">
+    <div class="label">Solution overview · for CFOs and business sponsors</div>
+    <p class="pull">"Power is the new budget line. Make every watt earn."</p>
+    <details>
+      <summary>Read full sample</summary>
+      <div class="full">
+        <p>NVIDIA now calls energy "the biggest bottleneck for AI infrastructure buildouts."<a class="src" href="#s11">11</a> That turns your AI plan into two questions: how much output you get per watt, and how fast new capacity starts producing.</p>
+        <h4>Start producing sooner</h4><p>NVIDIA DGX SuperPOD is a turnkey AI data center solution: compute, storage, networking, software and infrastructure management designed to work together and tested with real-world enterprise AI workloads.<a class="src" href="#s6">6</a><a class="src" href="#s7">7</a><a class="src" href="#s8">8</a> Your team spends its time on AI, not on platform complexity.<a class="src" href="#s7">7</a></p>
+        <h4>Get more from the power you have</h4><p>NVIDIA Mission Control can run at 85% power with 93% performance throughput in power-constrained or cost-conscious environments,<a class="src" href="#s10">10</a> and helps teams recover from problems 10x faster without manual intervention.<a class="src" href="#s9">9</a></p>
+        <h4>Pay for it the way you want</h4><p>Deploy on premises, colocated, rented from managed service providers or in private clouds.<a class="src" href="#s2">2</a> Certified partners offer predictable costs, and DGX-Ready Lifecycle Management brings simplified acquisition, scaling and upgrades.<a class="src" href="#s23">23</a></p>
+        <h4>Plan for what's next</h4><p>NVIDIA reports Vera Rubin NVL72 achieves "up to 10x higher inference throughput per watt at one-tenth the cost per token" (no baseline stated by NVIDIA for this figure).<a class="src" href="#s16">16</a> NVIDIA DGX Vera Rubin NVL72 brings that generation to DGX as a turnkey AI infrastructure solution.<a class="src" href="#s26">26</a></p>
+        <h4>Proof</h4><p><b>Lockheed Martin Boosts Innovation and Cuts Costs:</b> its AI factory runs on NVIDIA DGX SuperPOD and supports thousands of users.<a class="src" href="#s4">4</a> Per NVIDIA, the DGX platform powers AI factories at 8 of the top 10 global telcos and 7 of the top 10 global pharmas.<a class="src" href="#s1">1</a></p>
+        <p class="cta">Ask an NVIDIA DGX partner to size the deployment option that fits your power and budget.</p>
+        <p class="small muted">Independent writing sample built from public NVIDIA sources. Not an NVIDIA document.</p>
+      </div>
+    </details>
+    <p class="measure-line"><b>How I'd measure it · proposed, not measured.</b> Primary: downloads that turn into sales-qualified follow-ups. Leading: share of readers who request a partner sizing call.</p>
+  </div>
+
+  <div class="sample col">
+    <div class="label">Sales email · CIO · about 120 words</div>
+    <p class="pull">"Power, not GPUs, may be your next AI constraint"</p>
+    <details>
+      <summary>Read full sample</summary>
+      <div class="full">
+        <p class="small muted"><b>Subject:</b> Power, not GPUs, may be your next AI constraint · <b>To:</b> [CIO first name]</p>
+        <p>Hi [First Name],</p>
+        <p>NVIDIA now calls energy the biggest bottleneck for AI infrastructure buildouts.<a class="src" href="#s11">11</a> That changes the question from "how many GPUs?" to "how much AI per watt?"</p>
+        <p>NVIDIA DGX SuperPOD arrives as one tested system, so your team runs AI instead of wrestling with platform complexity.<a class="src" href="#s6">6</a><a class="src" href="#s7">7</a><a class="src" href="#s8">8</a> NVIDIA Mission Control can run at 85% power with 93% performance throughput when power is tight,<a class="src" href="#s10">10</a> and recovers from problems 10x faster without manual intervention.<a class="src" href="#s9">9</a></p>
+        <p>Lockheed Martin runs its AI factory on NVIDIA DGX SuperPOD for thousands of users.<a class="src" href="#s4">4</a> You can deploy on premises, colocated or with a managed service provider.<a class="src" href="#s2">2</a></p>
+        <p>Worth 20 minutes to compare options for your 2027 capacity plan?</p>
+        <p>[Name]</p>
+      </div>
+    </details>
+    <p class="measure-line"><b>How I'd measure it · proposed, not measured.</b> Primary: reply rate and meetings booked. Leading: open rate, with this subject line A/B tested against a product-led one.</p>
+  </div>
+
+  <div class="sample col">
+    <div class="label">Webinar abstract · infrastructure and finance leaders</div>
+    <p class="pull">"Tokens per Watt: Planning an AI Factory for the Vera Rubin Era"</p>
+    <details>
+      <summary>Read full sample</summary>
+      <div class="full">
+        <p>Energy is now the biggest bottleneck for AI infrastructure buildouts.<a class="src" href="#s11">11</a> This session shows infrastructure and finance leaders how to plan for it.</p>
+        <p>We'll walk through what changed at GTC 2026: rack-scale and POD-scale systems,<a class="src" href="#s15">15</a> BlueField-4 STX storage that extends GPU memory across the POD,<a class="src" href="#s17">17</a> and the Vera Rubin DSX AI Factory reference design, which spans compute, Spectrum-X Ethernet networking and storage.<a class="src" href="#s12">12</a> Then we'll map it to NVIDIA DGX SuperPOD and NVIDIA Mission Control, and show how DSX Max-Q is designed to maximize output within a fixed power budget.<a class="src" href="#s13">13</a></p>
+        <p class="cta">Register to leave with a one-page capacity-planning checklist.</p>
+      </div>
+    </details>
+    <p class="measure-line"><b>How I'd measure it · proposed, not measured.</b> Primary: registration-to-attendance rate. Leading: share of attendees who download the checklist or request a solution brief.</p>
+  </div>
+</section>
+
+<section id="check">
+  <div class="pair">
+    <div class="col">
+      <p class="q">What happens when an LLM writes the first draft?</p>
+      <h2 class="sec-title">The claim-check</h2>
+      <p>I first gave an LLM only verbatim NVIDIA excerpts and asked for an overview, a CIO email and a webinar abstract. Then I checked every factual claim against the sources.</p>
+      <div class="stats"><span><strong>35</strong>claims checked</span><span><strong>8</strong>failed (23%)</span></div>
+      <div class="types" id="types"></div>
+    </div>
+    <aside class="note"><svg viewBox="0 0 34 26" aria-hidden="true" class="draw"><path d="M32 4 C 20 4, 10 10, 4 20 M4 20 L 11 17 M4 20 L 6 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>8 of these 35 didn't survive the check</span></aside>
+  </div>
+
+  <div class="pair" style="margin-top:26px">
+    <div class="col">
+      <div class="label">One flagged claim, annotated</div>
+      <div class="ba">
+        <span class="mk" aria-label="note 1">1</span> <del>Operations that run themselves.</del>
+        <ins><span class="mk" aria-label="note 2">2</span> <mark>Recover from problems 10x faster, without manual intervention.</mark><a class="src" href="#s9">9</a></ins>
+      </div>
+      <ol class="callouts">
+        <li><b>1</b><span>Exaggeration: the source says Mission Control <i>simplifies</i> operations, not that they run themselves.</span></li>
+        <li><b>2</b><span>The rewrite keeps only the capability the source states, word for word, with its number.</span></li>
+        <li><b>3</b><span>This is claim #4 in the full log below, one of 2 exaggerations among the 8 failures.</span></li>
+      </ol>
+    </div>
+    <aside class="note"><svg viewBox="0 0 34 26" aria-hidden="true" class="draw"><path d="M32 4 C 20 4, 10 10, 4 20 M4 20 L 11 17 M4 20 L 6 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>the model copied every number correctly</span></aside>
+  </div>
+
+  <div class="col">
+    <ul class="pairs">
+      <li><s>"BMW reports data scientist productivity up eight-fold."</s> → "NVIDIA reports DGX boosted data scientists' productivity eight-fold at BMW." <span class="muted small">Wrong speaker: the figure is published by NVIDIA, not BMW.</span></li>
+      <li><s>"Hear how leaders such as Lockheed Martin and BMW are putting AI factories to work."</s> → Cut. The webinar now promises a planning checklist instead. <span class="muted small">Unsupported: no source says these customers present.</span></li>
+    </ul>
+    <h3 style="margin:28px 0 4px">The 8-rule checklist it produced</h3>
+    <ol class="rules">
+      <li>Full name with "NVIDIA" at first mention</li>
+      <li>"DGX SuperPOD", never "SuperPOD" alone</li>
+      <li>Model names exactly as NVIDIA writes them</li>
+      <li>"AI factory" is a concept, not a product</li>
+      <li>Numbers verbatim, with their conditions</li>
+      <li>Results credited to whoever published them</li>
+      <li>Every number carries a source</li>
+      <li>No invented offers, prices, specs or speakers</li>
+    </ol>
+    <details class="log"><summary>Full log of the 35 draft claims</summary><div class="tablewrap"><table class="stack"><thead><tr><th>#</th><th>Piece</th><th>Claim</th><th>Result</th></tr></thead><tbody id="log"></tbody></table></div></details>
+    <details class="log"><summary>Final check of the writing samples: 27 claims</summary><div class="tablewrap"><table class="stack"><thead><tr><th>#</th><th>Piece</th><th>Claim</th><th>Source</th></tr></thead><tbody id="log2"></tbody></table></div></details>
+    <p class="small muted" style="margin-top:12px">The final samples were rewritten for a CFO audience and checked against the same rules. Each of their 27 factual claims maps to a numbered source.</p>
+  </div>
+</section>
+
+<section id="opps">
+  <div class="pair">
+    <div class="col">
+      <p class="q">What content would I pilot first, and how would I know it worked?</p>
+      <h2 class="sec-title">Opportunities and proposed KPIs</h2>
+      <p><b>Sample:</b> 22 public NVIDIA DGX assets (web pages, solution overviews, a datasheet and technical brief, ebooks, customer stories, blogs, videos, a training brochure), checked live on Nov 23, 2026. <b>Not reviewed:</b> DLI course catalog, docs.nvidia.com (including DGX SuperPOD reference architectures), partner portals, gated content and events. These are ideas to test, not a coverage audit.</p>
+    </div>
+    <aside class="note"><svg viewBox="0 0 34 26" aria-hidden="true" class="draw"><path d="M32 4 C 20 4, 10 10, 4 20 M4 20 L 11 17 M4 20 L 6 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>sampled 22 public assets, not the whole library</span></aside>
+  </div>
+  <div class="col">
+    <div class="opp"><p class="chain">CFO → energy is the buildout bottleneck,<a class="src" href="#s11">11</a> yet by my tags 1 of 22 sampled assets serves sponsors at consideration → 4-page output-per-watt brief → sales-qualified follow-ups from finance titles</p><div class="meta">Business sponsor</div><h3>"AI factory economics when power is the limit"</h3><p>CFOs and business sponsors comparing AI infrastructure options. Energy is now NVIDIA's headline buildout constraint,<a class="src" href="#s11">11</a> but by my own audience and stage tags, 1 of 22 sampled assets is aimed at business sponsors at the consideration stage. The asset: a 4-page brief on output per watt and ownership models.</p></div>
+    <div class="opp"><p class="chain">Sellers and partners → buyers can reach NVIDIA platforms three ways<a class="src" href="#s20">20</a><a class="src" href="#s21">21</a><a class="src" href="#s22">22</a> and need a neutral way to pick → one-page partner-safe decision guide → stage progression where the guide was used</p><div class="meta">Sellers &amp; partners</div><h3>"DGX, partner system or cloud?" guide</h3><p>NVIDIA sellers and channel partners. Buyers can reach NVIDIA platforms through DGX, HGX/MGX partner servers or the cloud,<a class="src" href="#s20">20</a><a class="src" href="#s21">21</a><a class="src" href="#s22">22</a> and need a neutral way to pick. The asset: a one-page, partner-safe decision guide.</p></div>
+    <div class="opp"><p class="chain">Head of AI → the desk-to-data-center story is spread across product pages<a class="src" href="#s24">24</a><a class="src" href="#s25">25</a> → short guide from first prototype to DGX SuperPOD → data center conversations started by Spark and Station buyers</p><div class="meta">Head of AI</div><h3>"Desk to data center" developer path</h3><p>Heads of AI whose teams already use DGX Spark or DGX Station. Local systems connect to the data center,<a class="src" href="#s24">24</a><a class="src" href="#s25">25</a> but the story is spread across product pages. The asset: a short guide from first prototype to DGX SuperPOD.</p></div>
+  </div>
+  <div class="tablewrap">
+    <table class="stack kpi">
+      <caption>Proposed, not measured</caption>
+      <thead><tr><th>Asset</th><th>Primary KPI</th><th>Leading indicator</th><th>How I'd test it</th></tr></thead>
+      <tbody>
+        <tr><td><b>CFO brief</b></td><td>Downloads that turn into sales-qualified follow-ups from finance titles</td><td>Share of readers who request a partner sizing call</td><td>Send it to half of a finance nurture list and the current solution overview to the other half; compare follow-up rates.</td></tr>
+        <tr><td><b>Partner guide</b></td><td>Stage progression of opportunities where the guide was used</td><td>Seller and partner downloads, and reuse in customer decks</td><td>Pilot with a group of partners for one quarter; compare deal progression with partners not using it.</td></tr>
+        <tr><td><b>Developer path</b></td><td>Data center conversations started by Spark and Station buyers</td><td>Click-through from the guide to DGX SuperPOD pages</td><td>Add it to onboarding for half of new Spark and Station buyers; compare conversation rates.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col">
+    <details class="log"><summary>The 22 sampled assets, with my audience and stage tags</summary><div class="tablewrap"><table class="stack"><thead><tr><th>Asset</th><th>Type</th><th>Audience</th><th>Stage</th></tr></thead><tbody id="inv"></tbody></table></div><p class="small muted" style="margin-top:8px">Tags are my judgment from each page; some resource-library assets were tagged from their landing pages. An asset can serve more than one audience.</p></details>
+  </div>
+</section>
+
+<section id="team">
+  <div class="col">
+    <p class="q">Who has to say yes before any of this ships?</p>
+    <h2 class="sec-title">How I'd run this with the team</h2>
+    <p>None of these pilots can ship on marketing's word alone. Each needs input from product, engineering and the field, and sign-off from brand and legal before demand gen can launch it.</p>
+  </div>
+  <div class="tablewrap">
+    <table class="stack kpi">
+      <caption>Proposed</caption>
+      <thead><tr><th style="width:16%">Pilot</th><th>Input I need (from whom)</th><th>Who reviews / approves</th><th>What I hand over</th></tr></thead>
+      <tbody>
+        <tr><td><b>CFO brief</b></td><td>Product Management: roadmap and naming for the DGX systems mentioned. Solution Architects: technical accuracy of every power and cost claim. Sales: finance objections heard in deals.</td><td>Brand / Legal: claim and naming review. PM: final sign-off.</td><td>Final brief with its source sheet; Web / Demand Gen sets up the nurture A/B test.</td></tr>
+        <tr><td><b>Partner guide</b></td><td>Partner teams: field objections. Product Management: how DGX and HGX/MGX systems should be framed. Solution Architects: accuracy of each "choose it when".</td><td>Partner marketing and Legal: partner-safe wording.</td><td>One-page guide plus the training card below, for partner enablement.</td></tr>
+        <tr><td><b>Developer path</b></td><td>Product Management: DGX Spark and DGX Station roadmap. Engineering / Solution Architects: accuracy of the desk-to-data-center steps.</td><td>PM and Brand.</td><td>Guide and onboarding placement plan; Web / Demand Gen runs the half-and-half test.</td></tr>
+        <tr><td><b>Seller talk track</b></td><td>Sales and partner teams: top objections and training feedback. Solution Architects: accuracy of each response.</td><td>Sales enablement and Legal.</td><td>Printable training card; a revised version after the first sessions' feedback.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col">
+    <h3 style="margin:32px 0 6px">Questions I'd bring to PM and Engineering</h3>
+    <ol class="next">
+      <li>Under what workloads and cluster sizes was Mission Control's "85% power with 93% performance throughput" measured, and can sellers name them?<a class="src" href="#s10">10</a></li>
+      <li>"Recover from problems 10x faster": faster than what baseline?<a class="src" href="#s9">9</a></li>
+      <li>Which BlueField-4 STX and DOCA Memos KV-cache figures, such as the "up to 5x" inference throughput, can go into customer-facing material, and with which conditions?<a class="src" href="#s17">17</a></li>
+      <li>How should DGX systems be positioned next to partner systems built on HGX Rubin NVL8, so partners read them as complementary?<a class="src" href="#s21">21</a></li>
+      <li>The "up to 10x higher inference throughput per watt" figure for Vera Rubin NVL72: what is the comparison point we're allowed to state?<a class="src" href="#s16">16</a></li>
+    </ol>
+
+    <h3 style="margin:32px 0 6px">Feedback I'd have to reconcile</h3>
+    <div class="lesson"><h3>Sales wants "up to Nx faster" in the headline</h3><p class="muted">Rule 5 on this page says numbers stay verbatim, with their conditions. I'd headline the outcome and keep the number and its conditions in the proof line, the way the CFO one-pager leads with "Make every watt earn" and puts 85% / 93% in the body.</p></div>
+    <div class="lesson"><h3>Partners want DGX and HGX framed as complementary; DGX marketing wants a reason to choose DGX</h3><p class="muted">I'd lead with the line already in the guide, "Here NVIDIA tests the full stack together and stands behind it with its own AI experts and enterprise support", and never say "only". It gives DGX a reason without making partner systems the wrong choice.</p></div>
+
+    <div class="box card" id="card">
+      <div class="cardhead"><span class="label">Partner &amp; sales training card · NVIDIA DGX</span><button type="button" class="theme" id="printcard">Print card</button></div>
+      <p class="big" style="font-size:1.3rem">Three objections, three sourced answers</p>
+      <dl class="talk">
+        <dt>"We buy from Dell or HPE."</dt>
+        <dd>Partner servers built on NVIDIA HGX and MGX are NVIDIA platforms too.<a class="src" href="#s21">21</a><a class="src" href="#s22">22</a> If you want NVIDIA's full stack tested together, with direct access to NVIDIA AI experts, that's DGX,<a class="src" href="#s6">6</a><a class="src" href="#s8">8</a><a class="src" href="#s3">3</a> and it's bought through certified partners.<a class="src" href="#s23">23</a></dd>
+        <dt>"Our power is capped."</dt>
+        <dd>NVIDIA Mission Control can run at 85% power with 93% performance throughput in power-constrained or cost-conscious environments.<a class="src" href="#s10">10</a></dd>
+        <dt>"We need capacity now."</dt>
+        <dd>NVIDIA DGX Cloud is offered on AWS, Google Cloud, Microsoft Azure and OCI as a fully managed AI training platform, with "flexible term lengths and access to NVIDIA experts".<a class="src" href="#s27">27</a></dd>
+      </dl>
+      <div class="dodont">
+        <div><b>Say</b><ul><li>"NVIDIA DGX SuperPOD" at first mention</li><li>Numbers with their conditions</li><li>"Which path fits you"</li></ul></div>
+        <div><b>Don't say</b><ul><li>"SuperPOD" alone</li><li>"Only DGX…"</li><li>A number without its source</li></ul></div>
+      </div>
+      <p class="small muted printonly">Sources: nvidia.com pages for DGX SuperPOD, Mission Control, HGX, MGX, Get NVIDIA DGX and DGX Cloud, fetched Nov 23, 2026. Independent project; not affiliated with NVIDIA.</p>
+    </div>
+  </div>
+</section>
+
+<section id="next">
+  <div class="col">
+    <p class="q">What would I want to find out next?</p>
+    <h2 class="sec-title">What I'd test next, and open questions</h2>
+    <ul class="next">
+      <li>Run the CFO brief as an A/B test against the current solution overview in a finance nurture list.</li>
+      <li>Pilot the "DGX, partner system or cloud?" guide with a group of partners for one quarter.</li>
+      <li>Add the developer path to onboarding for half of new DGX Spark and DGX Station buyers.</li>
+      <li>A/B test the "Power, not GPUs" email subject line against a product-led one.</li>
+      <li>Open question: do sellers and partners recognize these three audiences and the "which path" guide? Everything here is outside-in, from public pages.</li>
+    </ul>
+    <div class="lesson"><h3>Accurate isn't the same as persuasive</h3><p class="muted">The LLM draft sounded like marketing and failed 8 of 35 claims. My first fix quoted NVIDIA so closely it read like a compliance review. The final version writes original, benefit-led copy and cites only the proof.</p></div>
+    <div class="lesson"><h3>Check framing, not just numbers</h3><p class="muted">The model never got a number wrong. It added claims, raised the volume, moved the speaker and shortened a name, so the checklist targets exactly those.</p></div>
+  </div>
+</section>
+
+<footer id="sources">
+  <p class="human">Written in New York, one source at a time. Thanks for reading this far.</p>
+  <p>Independent project using public NVIDIA materials; not affiliated with NVIDIA. Product names are trademarks of their owners.</p>
+  <div class="label" style="margin-top:28px">Sources · 32 numbered excerpts from 13 public NVIDIA pages, fetched Nov 23, 2026</div>
+  <ol class="srcs" id="srcs"></ol>
+</footer>
+</div>
+
+<script>
+(function(){
+  // theme toggle
+  var root=document.documentElement, btn=document.getElementById('theme');
+  function current(){ var t=root.getAttribute('data-theme'); if(t) return t; return window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; }
+  function label(){ btn.textContent = current()==='dark' ? 'Light mode' : 'Dark mode'; }
+  try{ var saved=localStorage.getItem('dgx-theme'); if(saved) root.setAttribute('data-theme',saved); }catch(e){}
+  label();
+  btn.addEventListener('click',function(){ var next=current()==='dark'?'light':'dark'; root.setAttribute('data-theme',next); try{localStorage.setItem('dgx-theme',next);}catch(e){} label(); });
+  var pc=document.getElementById('printcard');
+  if(pc){ pc.addEventListener('click',function(){ root.classList.add('print-card'); window.print(); }); window.addEventListener('afterprint',function(){ root.classList.remove('print-card'); }); }
+
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  var P='https://www.nvidia.com/en-us/data-center/', PR1='https://nvidianews.nvidia.com/news/nvidia-releases-vera-rubin-dsx-ai-factory-reference-design-and-omniverse-dsx-digital-twin-blueprint-with-broad-industry-support', PR2='https://nvidianews.nvidia.com/news/nvidia-vera-rubin-platform';
+  var S=[
+    [P+'dgx-platform/','DGX Platform','“NVIDIA DGX Platform Powers AI Factories Worldwide”: 8 of the Top 10 Global Telcos; 7 of the Top 10 Global Pharmas; 10 of the Top 10 Global Car Manufacturers.'],
+    [P+'dgx-platform/','DGX Platform','“Experience the power of DGX in a multitude of ways that fit your business: on premises, colocated, rented from managed service providers, in private clouds, and more.”'],
+    [P+'dgx-platform/','DGX Platform','“…with direct access to NVIDIA AI experts who can help optimize your AI workloads for faster results and quicker ROI.”'],
+    [P+'dgx-platform/','DGX Platform','“Lockheed Martin Boosts Innovation and Cuts Costs. Lockheed Martin is centralizing compute resources, machine learning operations tools, and best practices in their AI factory, powered by an NVIDIA DGX SuperPOD™ … supporting thousands of users…”'],
+    [P+'dgx-platform/','DGX Platform (BMW)','“NVIDIA DGX systems have boosted data scientists’ productivity eight-fold, optimizing resources and accelerating automotive manufacturing innovation.”'],
+    [P+'dgx-superpod/','DGX SuperPOD','“DGX SuperPOD isn’t just a collection of hardware—it’s a full-stack data center platform that includes industry-leading computing, storage, networking, software, and infrastructure management optimized to work together…”'],
+    [P+'dgx-superpod/','DGX SuperPOD','“NVIDIA DGX SuperPOD offers a turnkey AI data center solution for organizations building AI factories … rather than struggling with platform complexity.”'],
+    [P+'dgx-superpod/','DGX SuperPOD','“Extensively tested and pushed to the furthest limits with real-world enterprise AI workloads, so you don’t have to worry about application performance.”'],
+    [P+'mission-control/','Mission Control','“Identify, isolate, and recover from problems 10x faster, without manual intervention…”'],
+    [P+'mission-control/','Mission Control','“Run at 85% power with 93% performance throughput in power-constrained or cost-conscious environments with access to validated implementations of NVIDIA’s latest power innovations.”'],
+    [PR1,'Press release, Mar 16 2026: Vera Rubin DSX AI Factory reference design','“Energy is now the biggest bottleneck for AI infrastructure buildouts, with over $300 billion in equipment backlogs and more than 200 gigawatts of projects waiting in U.S. interconnection queues.”'],
+    [PR1,'Press release, Mar 16 2026: Vera Rubin DSX AI Factory reference design','“The NVIDIA Vera Rubin DSX AI Factory reference design outlines how to design, build and operate the entire AI factory infrastructure stack, spanning compute, NVIDIA Spectrum-X™ Ethernet networking and storage…”'],
+    [PR1,'Press release, Mar 16 2026: Vera Rubin DSX AI Factory reference design','“DSX Max-Q helps AI factories and ecosystem partners maximize computing output and token performance per watt on NVIDIA systems within a fixed power budget.”'],
+    [PR1,'Press release, Mar 16 2026: Vera Rubin DSX AI Factory reference design','Vertiv is building “Vertiv OneCore Rubin DSX, a prefabricated, converged data center infrastructure solution designed to accelerate AI factory deployment and AI output per watt.”'],
+    [PR2,'Press release, Mar 16 2026: NVIDIA Vera Rubin Opens Agentic AI Frontier','“AI infrastructure is rapidly evolving — from discrete chips and standalone servers to fully integrated rack-scale systems, POD-scale deployments, AI factories and sovereign AI.”'],
+    [PR2,'Press release, Mar 16 2026: NVIDIA Vera Rubin Opens Agentic AI Frontier','Vera Rubin NVL72: “…achieving up to 10x higher inference throughput per watt at one-tenth the cost per token.”'],
+    [PR2,'Press release, Mar 16 2026: NVIDIA Vera Rubin Opens Agentic AI Frontier','“The NVIDIA BlueField-4 STX rack-scale system is an AI-native storage infrastructure that extends GPU memory seamlessly across the POD.” STX “delivers a high-bandwidth shared layer optimized for storing and retrieving the massive key-value cache data generated by large language models and agentic AI workflows.” DOCA Memos “enables dedicated KV cache storage processing to boost inference throughput by up to 5x…”'],
+    [PR2,'Press release, Mar 16 2026: NVIDIA Vera Rubin Opens Agentic AI Frontier','“Spectrum-6 SPX Ethernet is engineered to accelerate east-west traffic across AI factories.”'],
+    [PR2,'Press release, Mar 16 2026: NVIDIA Vera Rubin Opens Agentic AI Frontier','“DSX Max-Q to enable dynamic power provisioning across the entire AI factory, resulting in the deployment of 30% more AI infrastructure within a fixed-power data center.”'],
+    [PR2,'Press release, Mar 16 2026: NVIDIA Vera Rubin Opens Agentic AI Frontier','“Vera Rubin-based products will be available from partners starting the second half of this year. This includes leading cloud providers Amazon Web Services, Google Cloud, Microsoft Azure and Oracle Cloud Infrastructure, along with NVIDIA Cloud Partners…” and “Global system manufacturers Cisco, Dell Technologies, HPE, Lenovo and Supermicro are expected to deliver a wide range of servers based on Vera Rubin products…”'],
+    [P+'hgx/','HGX Platform','“The NVIDIA HGX™ platform brings together the full power of NVIDIA GPUs, NVIDIA Vera CPUs, NVIDIA NVLink™, NVIDIA networking, and fully optimized AI and high-performance computing (HPC) software stacks…” “Rubin GPUs can be paired with an NVIDIA Vera CPU or x86-based baseboard.”'],
+    [P+'products/mgx/','MGX','“NVIDIA MGX™ provides an open modular reference architecture that enables OEMs, ODMs, and ecosystem partners to build accelerated systems faster.” “With MGX, OEM and ODM partners can build tailored solutions for different use cases…”'],
+    [P+'get-dgx/','Get NVIDIA DGX','“Experience predictable costs and unparalleled performance, backed by certified partners…” DGX-Ready Lifecycle Management: “simplified acquisition and scaling of AI infrastructure and hassle-free upgrades done by the experts.”'],
+    ['https://www.nvidia.com/en-us/products/workstations/dgx-station/','DGX Station','“NVIDIA DGX Station™ is the ultimate deskside AI supercomputer for building and running AI.” “…supporting models up to 1 trillion parameters.” “…seamlessly deploy to the data center or cloud.”'],
+    ['https://www.nvidia.com/en-us/products/workstations/dgx-spark/','DGX Spark','“NVIDIA DGX Spark™ is a complete platform for local autonomous agents.”'],
+    [P+'dgx-vera-rubin-nvl72/','DGX Vera Rubin NVL72','“NVIDIA DGX™ Vera Rubin NVL72 is a turnkey AI infrastructure solution…” “DGX Vera Rubin NVL72 delivers industry-leading performance per watt and tokens per watt for any AI workload…”'],
+    [P+'dgx-cloud/','DGX Cloud','“DGX™ Cloud is NVIDIA’s internal cloud environment for building and operating AI at scale to support NVIDIA’s most demanding internal AI use cases.” “…the software and operational patterns proven in DGX Cloud are directly applicable across the ecosystem.” “NVIDIA DGX Cloud with AWS is a high-performance, fully managed AI training platform that provides co-engineered NVIDIA accelerated computing clusters optimized for AWS with flexible term lengths and access to NVIDIA experts.” (The page lists the same for Google Cloud, Microsoft Azure and OCI.)'],
+    [P+'dgx-superpod/','DGX SuperPOD (DGX GB300)','DGX GB300 systems: “NVIDIA’s most advanced liquid-cooled AI system built with NVIDIA Grace Blackwell Ultra Superchips for AI training, post-training optimization, and test-time inference of the most complex AI models.”'],
+    [P+'mission-control/','Mission Control','“Bringing the World’s Most Advanced AI Factory Expertise to Every Business.” “…empowering platform teams to operate efficiently and scale confidently with fully supported software.”'],
+    [P+'dgx-platform/','DGX Platform','“Unlock productivity with the NVIDIA DGX platform, a complete AI solution with full-stack, intelligent software in NVIDIA Mission Control.”'],
+    [P+'dgx-platform/','DGX Platform','“NVIDIA Enterprise Services provide support, education, and infrastructure specialists for your DGX infrastructure.”'],
+    [P+'dgx-b300/','DGX B300','“Compatible with NVIDIA MGX™ and traditional enterprise racks and with full-stack software, it simplifies and streamlines AI deployment…”']
+  ];
+  document.getElementById('srcs').innerHTML=S.map(function(s,i){ return '<li id="s'+(i+1)+'"><b>'+(i+1)+'</b><span><a href="'+s[0]+'" target="_blank" rel="noopener">'+esc(s[1])+'</a> — '+esc(s[2])+'</span></li>'; }).join('');
+
+  var LOG=[
+    ['Overview','DGX platform, featuring DGX SuperPOD, unifies NVIDIA software, infrastructure and expertise',1],['Overview','DGX SuperPOD is a full-stack platform optimized to work together',1],['Overview','A turnkey AI data center, tested against real-world workloads',1],['Overview','Header: "Operations that run themselves"',0,'Exaggeration'],['Overview','Mission Control turns racked hardware into consumable resources',1],['Overview','Covers cluster deployment, workload orchestration, building management',1],['Overview','Recover from problems 10x faster, without manual intervention',1],['Overview','85% power with 93% performance throughput when power-constrained',1],['Overview','Run on premises, colocated, via MSPs or private clouds',1],['Overview','The platform adapts to your data center strategy',1],['Overview','NVIDIA AI experts help optimize workloads for quicker ROI',1],['Overview','Enterprise Services provide support, education, specialists',1],['Overview','10 of the top 10 global car manufacturers',1],['Overview','9 of the top 10 U.S. government institutions',1],['Overview','8 of the top 10 global telcos',1],['Overview','7 of the top 10 global pharmas',1],['Overview','Lockheed Martin centralizes compute and MLOps on DGX SuperPOD',1],['Overview','…for thousands of users',1],['Overview','"BMW reports" an eight-fold productivity gain',0,'Wrong source'],['Overview','"Request a DGX SuperPOD consultation"',0,'Unsupported'],
+    ['Email','"Most enterprise AI programs stall on infrastructure complexity"',0,'Unsupported'],['Email','DGX SuperPOD is a turnkey AI data center, tested together',1],['Email','"BMW reports" productivity up eight-fold',0,'Wrong source'],['Email','Lockheed Martin is centralizing "on a SuperPOD"',0,'Wrong name'],['Email','9 of the top 10 U.S. government institutions',1],['Email','10 of the top 10 global car manufacturers',1],['Email','Deploy on premises, colocated, MSP or private cloud',1],['Email','NVIDIA AI experts help you reach ROI faster',1],
+    ['Webinar','Turning racked hardware into resources is "one of the hardest jobs in the enterprise"',0,'Exaggeration'],['Webinar','DGX SuperPOD and Mission Control simplify operations',1],['Webinar','Recover from problems 10x faster',1],['Webinar','Run efficiently in power-constrained environments',1],['Webinar','Deployment from on-premises to private cloud',1],['Webinar','"Hear how leaders such as Lockheed Martin and BMW…"',0,'Unsupported'],['Webinar','Leave with a view of how to reach AI ROI faster',1]
+  ];
+  var types={}; LOG.forEach(function(r){ if(!r[2]) types[r[3]]=(types[r[3]]||0)+1; });
+  document.getElementById('types').innerHTML=['Unsupported','Exaggeration','Wrong source','Wrong name'].map(function(k){ return '<span><b>'+(types[k]||0)+'</b> '+k.toLowerCase()+'</span>'; }).join('');
+  document.getElementById('log').innerHTML=LOG.map(function(r,i){ return '<tr><td class="cid">'+(i+1)+'</td><td>'+r[0]+'</td><td>'+esc(r[1])+'</td><td><span class="st '+(r[2]?'ok':'bad')+'">'+(r[2]?'Supported':esc(r[3]))+'</span></td></tr>'; }).join('');
+
+  var FIN=[
+    ['CFO one-pager','Energy is now the biggest bottleneck for AI buildouts',11],['CFO one-pager','DGX SuperPOD is a turnkey AI data center solution',7],['CFO one-pager','Compute, storage, networking, software and management designed to work together',6],['CFO one-pager','Tested with real-world enterprise AI workloads',8],['CFO one-pager','Teams spend time on AI, not platform complexity',7],['CFO one-pager','Mission Control: 85% power with 93% throughput when power-constrained',10],['CFO one-pager','Recover from problems 10x faster without manual intervention',9],['CFO one-pager','Deploy on premises, colocated, via MSPs or private clouds',2],['CFO one-pager','Certified partners offer predictable costs',23],['CFO one-pager','DGX-Ready Lifecycle Management: simplified acquisition, scaling, upgrades',23],['CFO one-pager','Vera Rubin NVL72: up to 10x throughput per watt at one-tenth the cost per token (NVIDIA reports; no baseline stated)',16],['CFO one-pager','DGX Vera Rubin NVL72 is a turnkey AI infrastructure solution',26],['CFO one-pager','"Lockheed Martin Boosts Innovation and Cuts Costs"',4],['CFO one-pager','Lockheed Martin AI factory on DGX SuperPOD, thousands of users',4],['CFO one-pager','8 of top 10 global telcos, 7 of top 10 global pharmas (per NVIDIA)',1],
+    ['CIO email','Energy is the biggest bottleneck for AI buildouts',11],['CIO email','DGX SuperPOD arrives as one tested system','6, 8'],['CIO email','Run AI instead of wrestling with platform complexity',7],['CIO email','85% power with 93% throughput when power is tight',10],['CIO email','Recover from problems 10x faster',9],['CIO email','Lockheed Martin AI factory on DGX SuperPOD, thousands of users',4],['CIO email','Deploy on premises, colocated or with an MSP',2],
+    ['Webinar','Energy is the biggest bottleneck for AI buildouts',11],['Webinar','Shift to rack-scale and POD-scale systems (GTC 2026)',15],['Webinar','BlueField-4 STX extends GPU memory across the POD',17],['Webinar','DSX reference design spans compute, Spectrum-X networking and storage',12],['Webinar','DSX Max-Q maximizes output within a fixed power budget',13]
+  ];
+  document.getElementById('log2').innerHTML=FIN.map(function(r,i){ return '<tr><td class="cid">'+(i+1)+'</td><td>'+r[0]+'</td><td>'+esc(r[1])+'</td><td>'+String(r[2]).split(', ').map(function(n){return '<a class="src" href="#s'+n+'">'+n+'</a>';}).join('')+'</td></tr>'; }).join('');
+
+  var AUD={INF:'Infrastructure leader',AI:'Head of AI',BIZ:'Business sponsor'};
+  var INV=[
+    ['DGX Platform','Web page','https://www.nvidia.com/en-us/data-center/dgx-platform/',['BIZ','INF','AI'],'Awareness'],
+    ['DGX SuperPOD','Web page','https://www.nvidia.com/en-us/data-center/dgx-superpod/',['INF'],'Consideration'],
+    ['DGX Vera Rubin NVL72','Web page','https://www.nvidia.com/en-us/data-center/dgx-vera-rubin-nvl72/',['INF'],'Consideration'],
+    ['DGX B300','Web page','https://www.nvidia.com/en-us/data-center/dgx-b300/',['INF'],'Consideration'],
+    ['DGX GB300','Web page','https://www.nvidia.com/en-us/data-center/dgx-gb300/',['INF'],'Consideration'],
+    ['DGX Spark','Web page','https://www.nvidia.com/en-us/products/workstations/dgx-spark/',['AI'],'Decision'],
+    ['DGX Cloud','Web page','https://www.nvidia.com/en-us/data-center/dgx-cloud/',['AI'],'Awareness'],
+    ['Mission Control','Web page','https://www.nvidia.com/en-us/data-center/mission-control/',['INF'],'Consideration'],
+    ['DGX Platform Solution Overview','Solution overview','https://resources.nvidia.com/en-us-dgx-platform/nvidia-dgx-platform-solution-overview-web-us',['BIZ','INF'],'Consideration'],
+    ['DGX B300 Datasheet','Datasheet','https://resources.nvidia.com/en-us-dgx-systems/dgx-b300-datasheet',['INF'],'Decision'],
+    ['DGX B300 Technical Brief','Technical brief','https://resources.nvidia.com/en-us-dgx-systems/dgx-b300-technical-brief',['INF'],'Decision'],
+    ['Mission Control Solution Overview','Solution overview','https://resources.nvidia.com/en-us-dgx-software/mission-control-solution-overview',['INF'],'Consideration'],
+    ['AI Factories in Action','Ebook','https://resources.nvidia.com/en-us-dgx-platform/ai-factories-in-action-ebook',['BIZ'],'Awareness'],
+    ['The Blueprint for AI Success','Ebook','https://resources.nvidia.com/en-us-dgx-systems/the-blueprint-for-ai-success-ebook/',['BIZ'],'Awareness'],
+    ['Lockheed Martin’s AI Factory','Customer story','https://resources.nvidia.com/en-us-dgx-platform/lockheed-martin-ai-factory-with-dgx-superpod/',['BIZ','AI'],'Decision'],
+    ['Lilly AI factory for drug discovery','Blog','https://blogs.nvidia.com/blog/lilly-ai-factory-nvidia-blackwell-dgx-superpod/',['BIZ'],'Awareness'],
+    ['BNY deploys DGX SuperPOD','Customer story','https://resources.nvidia.com/en-us-dgx-customer-use-cases/bny-mellon-superpod/',['BIZ'],'Decision'],
+    ['AI factories are redefining data centers','Blog','https://blogs.nvidia.com/blog/ai-factory',['BIZ'],'Awareness'],
+    ['DGX Spark in higher education','Blog','https://blogs.nvidia.com/blog/dgx-spark-higher-education/',['AI'],'Awareness'],
+    ['Jumpstart Your AI Factory with NVIDIA Blackwell in 2026','Video','https://resources.nvidia.com/en-us-dgx-platform/jumpstart-your-ai-factory-with-nvidia-blackwell',['BIZ','INF'],'Awareness'],
+    ['Next-Generation DGX Architecture (2024)','Video','https://resources.nvidia.com/en-us-dgx-systems/gtc-2024-next-gen-dgx-architecture',['INF','AI'],'Consideration'],
+    ['NVIDIA DLI for DGX Training Brochure (2023)','Training','https://resources.nvidia.com/en-us-dgx-systems/dgx-training-special-offer-2023',['AI','INF'],'Enablement']
+  ];
+  document.getElementById('inv').innerHTML=INV.map(function(x){ return '<tr><td><a href="'+x[2]+'" target="_blank" rel="noopener">'+esc(x[0])+'</a></td><td>'+x[1]+'</td><td>'+x[3].map(function(k){return AUD[k];}).join(', ')+'</td><td>'+x[4]+'</td></tr>'; }).join('');
+})();
+</script>
+</body>
+</html>
